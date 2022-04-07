@@ -39,12 +39,12 @@ def explore(adj: List[List[int]], x: int, visited: List[int]) -> None:
     adj: List[List[int]]
         Adjacency list representation of graph.
     x: int
-        current node
+        current vertex
     visited: List[int]
-        list to keep track of visited nodes ---> 1- visited; 0- not visited
+        list to keep track of visited vertices ---> 1- visited; 0- not visited
     """
 
-    # mark neighbor as visited
+    # mark neighbor vertex as visited
     visited[x] = 1
     # explore neighbors
     for neighbor in adj[x]:
