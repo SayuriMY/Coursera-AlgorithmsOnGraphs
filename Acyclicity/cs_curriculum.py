@@ -153,6 +153,22 @@ class Graph:
 
 
 def acyclic(graph: Graph, rev_graph: Graph) -> int:
+    """Check if the given graph has cycles.
+
+    Parameters
+    ----------
+    graph: Graph
+        Graph object
+
+    rev_graph: Graph
+        Graph object representation of the reversed graph
+
+    Returns
+    -------
+    int
+        0 if graph is acyclic - does not have cycles; 1 otherwise.
+    """
+    
     # DFS on reversed graph recording the post order of each vertex.
     rev_graph.DFS()
 
