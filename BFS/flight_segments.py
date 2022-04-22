@@ -86,10 +86,8 @@ def distance(adj: List[List[int]], s: int, t: int) -> Union[float, int]:
 
     Returns
     -------
-    dist: List[float]
-        array of the distance between origin s to each other neighbor.
-    prev: List[Union[None, int]]
-        array of the previous node from which each node was discovered.
+    int:
+        Distance between origin s and end t.
     """
     dist, prev = bfs(adj, s)
 
