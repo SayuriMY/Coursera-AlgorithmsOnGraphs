@@ -26,14 +26,61 @@ Time limit: 10 sec
 
 Memory Limit: 512 MB
 """
-
 import sys
-import queue
+from math import inf
+from typing import List, Union
+
+
+def bellman_ford(adj: List[List[int]], cost: List[List[int]], s: int, shortest: List[int], distan: List[Union[float, int]]) -> List[Union[float,int]]:
+    n = len(adj)
+
+    dist = [inf] * n
+    prev = [-1] * n
+
+    dist[s] = 0
+    last_node_relaxed = -1
+
+    # repeat |V| - 1 times.
+    for iter in range(n):
+        last_node_relaxed = -1
+
+        for vertex in range(n):
+            for neigh in adj[vertex]:
+                if distan[neigh] > distan[vertex] + cost[vertex][neigh]:
+                    distan[neigh] = distan[vertex] + cost[vertex][neigh]
+
+                # relax
+                if dist[neigh] > dist[vertex] + cost[vertex][neigh]:
+                    dist[neigh] = dist[vertex] + cost[vertex][neigh]
+                    prev[neigh] = vertex
+
+                    last_node_relaxed = neigh
+
+                    if iter == n - 1:
+                        shortest[neigh] = 0
+
+        # stop iterations if distance cannot be further improved.
+        if last_node_relaxed == -1:
+            break
+
+    return dist
 
 
 def shortet_paths(adj, cost, s, distance, reachable, shortest):
-    #write your code here
-    pass
+
+    distan = [inf] * len(adj)
+    distan[s] = 0
+
+    for iter in range(len(adj)):
+        dist = bellman_ford(adj, cost, iter, shortest, distan)
+
+        # if iter == s:
+        #     for i in range(len(adj)):
+        #         # if i is s, then it is reachable
+        #         if dist[i] != inf:
+        #             reachable[i] = 1
+        #
+        #         distance[i] = dist[i]
 
 
 if __name__ == '__main__':
@@ -44,13 +91,13 @@ if __name__ == '__main__':
     edges = list(zip(zip(data[0:(3 * m):3], data[1:(3 * m):3]), data[2:(3 * m):3]))
     data = data[3 * m:]
     adj = [[] for _ in range(n)]
-    cost = [[] for _ in range(n)]
+    cost = [[0] * n for _ in range(n)]
     for ((a, b), w) in edges:
         adj[a - 1].append(b - 1)
-        cost[a - 1].append(w)
+        cost[a - 1][b - 1] = w
     s = data[0]
     s -= 1
-    distance = [10**19] * n
+    distance = [10 ** 19] * n
     reachable = [0] * n
     shortest = [1] * n
     shortet_paths(adj, cost, s, distance, reachable, shortest)

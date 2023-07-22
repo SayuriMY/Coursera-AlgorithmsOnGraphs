@@ -1,24 +1,25 @@
-#Uses python3
+# Uses python3
 """
-File name: flight_segments.py
+File name: bipartile_graph.py
 Author: Sayuri Monarrez Yesaki
 Date created: 04/21/2022
-Date last modified: 04/22/2022
+Date last modified: 04/25/2022
 Python version: 3.9
 
-You would like to compute the minimum number of flight segments to get from one city to another one. For this,
-you construct the following undirected graph: vertices represent cities, there is an edge between two vertices
-whenever there is a flight between the corresponding two cities. Then, it suffices to find a shortest path from one
-of the given cities to the other one.
+An undirected graph is called bipartite if its vertices can be split into two parts such that each edge of the graph
+joins to vertices from different parts. Bipartite graphs arise naturally in applications where a graph is used to
+model connections between objects of two different types (say, boys and girls; or students and dormitories).
 
-Task: Given an undirected graph with n vertices and m edges and two vertices u and v, compute the length of a
-shortest path between u and v (that is, the minimum number of edges in a path from u to v).
+An alternative definition is the following: a graph is bipartite if its vertices can be colored with two colors
+(say, black and white) such that the endpoints of each edge have different colors.
 
-Input: A graph is given in the standard format. The next line contains two vertices u and v.
+Task: Given an undirected graph with n vertices and m edges, check whether it is bipartite.
 
-Constraints: 2 <= n <= 10^5; 0 <= m <= 10^5; u != v, 1 <= u, v <= n.
+Input: A graph is given in the standard format.
 
-Output: Output the minimum number of edges in a path from u to v, or -1 if there is no path.
+Constraints: 1 <= n <= 10^5; 0 <= m <= 10^5
+
+Output: Output 1 if the graph is bipartite, 0 otherwise.
 
 Time limit: 10 sec
 
@@ -26,11 +27,66 @@ Memory Limit: 512 MB
 """
 
 import sys
-import queue
+from typing import List, Union
 
-def bipartite(adj):
-    #write your code here
-    return -1
+
+def bfs(adj: List[List[int]], s: int, assigned_color: List[Union[None, int]]):
+    """Use Bread-First Search to explore/traverse the given graph
+
+    Parameters
+    ----------
+    adj: List[List[int]]
+            Graph - adjacency list representation
+    s: int
+        origin neighbor
+
+    assigned_color: List[float]
+        array of the distance between origin s to each other neighbor. - 0 --> white; 1 --> black
+    """
+
+    assigned_color[s] = 0
+
+    q = [s]
+    while len(q) != 0:
+        # dequeue the first element in the queue
+        u = q.pop(0)
+
+        # find the
+        for neighbor in adj[u]:
+            if assigned_color[neighbor] is None:
+                q.append(neighbor)
+
+                if assigned_color[u] == 0:
+                    assigned_color[neighbor] = 1
+                else:
+                    assigned_color[neighbor] = 0
+
+
+def bipartite(adj: List[List[int]]) -> int:
+    """Recursively explore nodes reachable from x. Neighbors only marked as visited when
+    explored.
+
+    Parameters
+    ----------
+    adj: List[List[int]]
+        Adjacency list representation of graph.
+    """
+
+    n = len(adj)
+
+    # array to store the distance between origin, s, to each neighbor
+    assigned_color = [None] * n
+
+    for vertex in range(n):
+        if assigned_color[vertex] is None:
+            bfs(adj, vertex, assigned_color)
+
+    for vertex in range(n):
+        for neigh in adj[vertex]:
+            if assigned_color[vertex] == assigned_color[neigh]:
+                return 0
+    return 1
+
 
 if __name__ == '__main__':
     input = sys.stdin.read()
